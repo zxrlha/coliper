@@ -13,7 +13,7 @@ test('plugin.json exists and is valid', () => {
 });
 
 test('subagent json files exist and contain valid roles', () => {
-  const agents = ['explorer', 'librarian', 'planner', 'momus', 'metis', 'reviewer'];
+  const agents = ['explorer', 'librarian', 'planner', 'momus', 'metis', 'reviewer', 'implementer'];
   for (const agent of agents) {
     const p = path.resolve(`plugins/coliper/agents/${agent}.json`);
     assert.strictEqual(fs.existsSync(p), true, `${agent}.json should exist`);

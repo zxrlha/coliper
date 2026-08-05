@@ -33,8 +33,8 @@ test('all 7 skills are present in .agents/plugins/coliper/skills/', () => {
   }
 });
 
-test('all 6 subagents are present in .agents/plugins/coliper/agents/', () => {
-  const agents = ['explorer', 'librarian', 'planner', 'momus', 'metis', 'reviewer'];
+test('all 7 subagents are present in .agents/plugins/coliper/agents/', () => {
+  const agents = ['explorer', 'librarian', 'planner', 'momus', 'metis', 'reviewer', 'implementer'];
 
   for (const agent of agents) {
     const agentJson = path.join(BASE_PATH, 'agents', `${agent}.json`);
