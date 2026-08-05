@@ -1,0 +1,8 @@
+{
+  "name": "coliper",
+  "version": "0.1.0",
+  "description": "Agent harness for complex codebases in Antigravity: project memory, strategic planning, durable execution, and verified completion.",
+  "skills": ["skills/*"],
+  "agents": ["agents/*"],
+  "rules": ["rules/*"]
+}
