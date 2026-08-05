@@ -1,0 +1,14 @@
+{
+  "mcpServers": {
+    "ast-grep": {
+      "command": "ast-grep",
+      "args": ["lsp"],
+      "description": "AST-grep Model Context Protocol server providing structural AST code search and refactoring tools."
+    },
+    "lsp-server": {
+      "command": "typescript-language-server",
+      "args": ["--stdio"],
+      "description": "Language Server Protocol integration server providing precise symbol navigation, definition lookups, and diagnostics."
+    }
+  }
+}
