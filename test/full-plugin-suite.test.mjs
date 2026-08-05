@@ -14,12 +14,11 @@ test('.agents/plugins/coliper/plugin.json exists and is valid JSON', () => {
   assert.ok(Array.isArray(content.agents));
 });
 
-test('all 8 skills are present in .agents/plugins/coliper/skills/', () => {
+test('all 7 skills are present in .agents/plugins/coliper/skills/', () => {
   const skills = [
     'init-deep',
     'ultraplan',
     'start-work',
-    'ulw-loop',
     'review-work',
     'remove-ai-slops',
     'ast-grep',
@@ -34,14 +33,21 @@ test('all 8 skills are present in .agents/plugins/coliper/skills/', () => {
   }
 });
 
-test('all 7 subagents are present in .agents/plugins/coliper/agents/', () => {
-  const agents = ['explorer', 'librarian', 'planner', 'momus', 'metis', 'reviewer', 'implementer'];
+test('all 8 subagents are present in .agents/plugins/coliper/agents/', () => {
+  const agents = ['explorer', 'librarian', 'planner', 'momus', 'metis', 'reviewer', 'implementer', 'qa'];
 
   for (const agent of agents) {
-    const agentJson = path.join(BASE_PATH, 'agents', `${agent}.json`);
-    assert.strictEqual(fs.existsSync(agentJson), true, `Subagent ${agent}.json should exist under .agents/plugins/coliper/agents/`);
-    const data = JSON.parse(fs.readFileSync(agentJson, 'utf8'));
-    assert.strictEqual(data.name, agent);
+    const agentMd = path.join(BASE_PATH, 'agents', `${agent}.md`);
+    assert.strictEqual(fs.existsSync(agentMd), true, `Subagent ${agent}.md should exist under .agents/plugins/coliper/agents/`);
+    const content = fs.readFileSync(agentMd, 'utf8');
+    assert.ok(content.startsWith('---'), `Subagent ${agent}.md should start with YAML frontmatter`);
+    const parts = content.split('---');
+    assert.ok(parts.length >= 3, `Subagent ${agent}.md should have frontmatter and body`);
+    assert.ok(parts[1].includes(`name: ${agent}`), `Subagent ${agent}.md frontmatter should contain 'name: ${agent}'`);
+    assert.ok(parts[1].includes('description:'), `Subagent ${agent}.md frontmatter should contain 'description:'`);
+    assert.ok(parts[1].includes('model:'), `Subagent ${agent}.md frontmatter should contain 'model:'`);
+    const body = parts.slice(2).join('---').trim();
+    assert.ok(body.length > 0, `Subagent ${agent}.md body should not be empty`);
   }
 });
 
