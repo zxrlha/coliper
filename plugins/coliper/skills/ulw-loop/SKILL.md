@@ -31,11 +31,12 @@ Use `/ulw-loop` to run autonomous, iterative execution loops for complex or open
 
 ### 4. Loop Control Flow
 1. Check current iteration counter against max cap (100 in normal mode, 500 in ultrawork mode). If cap reached without success, stop and request user guidance.
-2. Perform next logical implementation or fix step.
-3. Run verification test suite / build.
-4. Call `reviewer` subagent to audit result.
-5. If `reviewer` returns `VERIFIED_COMPLETE`, exit loop and report success.
-6. If `reviewer` returns `INCOMPLETE` with feedback, incorporate feedback and proceed to next iteration.
+2. Call `qa` subagent to generate or update tests for the target feature/fix step.
+3. Call `implementer` subagent to perform next logical implementation or fix step.
+4. Call `qa` subagent to run verification test suite / build and record logs.
+5. Call `reviewer` subagent to audit result and QA evidence.
+6. If `reviewer` returns `VERIFIED_COMPLETE`, exit loop and report success.
+7. If `reviewer` returns `INCOMPLETE` with feedback, incorporate feedback and proceed to next iteration.
 
 ### 5. Loop Halting Criteria
 - Exits ONLY when:

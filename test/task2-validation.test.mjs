@@ -28,3 +28,15 @@ test('core skills contain name, description, and slash commands', () => {
     assert.ok(content.includes(cmd), `${id}/SKILL.md should reference slash command ${cmd}`);
   }
 });
+
+test('start-work skill specifies Final Verification Wave and F1-F4 audit execution', () => {
+  const p = path.resolve('plugins/coliper/skills/start-work/SKILL.md');
+  const content = fs.readFileSync(p, 'utf8');
+  assert.ok(content.includes('Final Verification Wave Execution Sequence'), 'start-work should define Final Verification Wave Execution Sequence');
+  assert.ok(content.includes('F1: Plan Compliance Audit'), 'start-work should specify F1 Plan Compliance Audit');
+  assert.ok(content.includes('F2: Code Quality & Discipline Review'), 'start-work should specify F2 Code Quality Review');
+  assert.ok(content.includes('F3: System & Integration QA'), 'start-work should specify F3 System Integration QA');
+  assert.ok(content.includes('F4: Scope Fidelity Audit'), 'start-work should specify F4 Scope Fidelity Audit');
+  assert.ok(content.includes('review-work'), 'start-work should integrate review-work skill');
+});
+
