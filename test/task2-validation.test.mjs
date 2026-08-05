@@ -5,7 +5,7 @@ import { test } from 'node:test';
 
 const skills = [
   { id: 'init-deep', cmd: '/init-deep' },
-  { id: 'ulw-plan', cmd: '/ulw-plan' },
+  { id: 'ultraplan', cmd: '/ultraplan' },
   { id: 'start-work', cmd: '/start-work' },
   { id: 'ulw-loop', cmd: '/ulw-loop' }
 ];
@@ -39,4 +39,3 @@ test('start-work skill specifies Final Verification Wave and F1-F4 audit executi
   assert.ok(content.includes('F4: Scope Fidelity Audit'), 'start-work should specify F4 Scope Fidelity Audit');
   assert.ok(content.includes('review-work'), 'start-work should integrate review-work skill');
 });
-

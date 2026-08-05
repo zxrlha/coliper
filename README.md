@@ -9,7 +9,8 @@
 Coliper equips your workspace with specialized slash commands for every phase of the development lifecycle:
 
 - **`/init-deep`**: Deep codebase research and repository analysis. Maps architecture, conventions, and dependencies to initialize workspace memory context before starting major work.
-- **`/ulw-plan`**: Ultra-Lightweight (ULW) plan generation. Breaks complex feature requests into actionable, verifiable, step-by-step implementation plans.
+- **`/ultraplan`**: Prometheus strategic plan generation. Breaks complex feature requests into actionable, verifiable, step-by-step implementation plans.
+- **`/brainstorm`**: Interactive spec authoring. Refines user ideas into fully formed design spec documents before plan drafting.
 - **`/start-work`**: Executes implementation plans with test-driven development (TDD), strict subagent delegation, and continuous verification.
 - **`/ulw-loop`**: An iterative task execution loop that handles multi-step implementation plans with automated checkpoint validation.
 - **`/review-work`**: Conducts multi-dimensional code reviews checking functionality, test coverage, safety, edge cases, and architectural compliance.
@@ -39,12 +40,13 @@ plugins/coliper/
 ├── mcp_config.json         # MCP server tool configuration (ast-grep)
 ├── skills/                 # Skill instructions with YAML frontmatter
 │   ├── init-deep/
-│   ├── ulw-plan/
+│   ├── ultraplan/
 │   ├── start-work/
 │   ├── ulw-loop/
 │   ├── review-work/
 │   ├── remove-ai-slops/
-│   └── ast-grep/
+│   ├── ast-grep/
+│   └── brainstorm/
 ├── agents/                 # Specialized subagent definitions
 │   ├── explorer.json
 │   ├── librarian.json

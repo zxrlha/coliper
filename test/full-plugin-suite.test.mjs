@@ -14,15 +14,16 @@ test('.agents/plugins/coliper/plugin.json exists and is valid JSON', () => {
   assert.ok(Array.isArray(content.agents));
 });
 
-test('all 7 skills are present in .agents/plugins/coliper/skills/', () => {
+test('all 8 skills are present in .agents/plugins/coliper/skills/', () => {
   const skills = [
     'init-deep',
-    'ulw-plan',
+    'ultraplan',
     'start-work',
     'ulw-loop',
     'review-work',
     'remove-ai-slops',
-    'ast-grep'
+    'ast-grep',
+    'brainstorm'
   ];
 
   for (const skill of skills) {
