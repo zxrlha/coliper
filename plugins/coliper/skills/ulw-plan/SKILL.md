@@ -1,16 +1,18 @@
 ---
 name: ulw-plan
-description: Prometheus strategic planner. Receives task requirements and creates a decision-complete implementation plan in .coliper/plans/<slug>.md and as an Antigravity system artifact without touching product code.
+description: Prometheus strategic planner with Metis gap analysis and Momus plan auditing. Creates a decision-complete implementation plan in .coliper/plans/<slug>.md and as an Antigravity system artifact without touching product code.
 ---
 
 # `/ulw-plan` - Prometheus Strategic Planner
 
-Use `/ulw-plan` to design architectural strategies and write decision-complete implementation plans before making any code modifications.
+Use `/ulw-plan` to design architectural strategies, run multi-phase gap analysis and plan auditing, and write decision-complete implementation plans before making any code modifications.
 
 ## Overview
-`/ulw-plan` orchestrates two mandatory subagent phases and uses a **Hybrid Artifact Strategy**:
+`/ulw-plan` orchestrates a mandatory **Three-Stage Subagent Review Workflow** and uses a **Hybrid Artifact Strategy**:
 1. **Durable Plan Store**: `.coliper/plans/<slug>.md` (ignored by git, holds persistent workspace plan & state).
 2. **Antigravity System Artifact**: `<appDataDir>/brain/<conversation-id>/implementation_plan.md` (renders interactive IDE UI panel with Feedback/Proceed controls).
+
+---
 
 ## Guidelines & Instructions
 
@@ -18,36 +20,46 @@ Use `/ulw-plan` to design architectural strategies and write decision-complete i
 - **STRICT CONSTRAINT**: Do NOT modify product code during the planning phase.
 - Only inspect codebase files, read context documents, and write to `.coliper/plans/<slug>.md` and system artifact `implementation_plan.md`.
 
+---
+
 ### 2. Mandatory Subagent Execution Workflow
 
-#### Step A: Dispatch Planner Subagent (MUST call `invoke_subagent`)
-- Call `invoke_subagent` with `TypeName: "planner"` (or `"pro"`).
-- Provide full task requirements, relevant module paths, constraints, and architecture goals.
-- Instruct `planner` to perform read-only codebase research and write the plan to `.coliper/plans/<slug>.md` AND to `<appDataDir>/brain/<conversation-id>/implementation_plan.md` with `ArtifactMetadata` (`UserFacing: true`, `RequestFeedback: true`).
+#### Phase 1: Pre-Planning Gap Analysis (MUST call `invoke_subagent` with `metis`)
+- Call `invoke_subagent` with `TypeName: "metis"`.
+- Pass user requirements, scope boundaries, and draft ideas.
+- Instruct `metis` to detect:
+  - **Contradictions**: conflicting requirements.
+  - **Ambiguity**: vague terms requiring concrete clarification.
+  - **Missing Constraints**: missing auth, rollback, concurrency, or test strategies.
+  - **Brownfield & Topology Risks**: integration issues with existing codebase conventions.
+- If `metis` returns `GAPS FOUND`, address the reported gaps before proceeding to plan drafting.
 
-#### Step B: Dispatch Plan Reviewer Subagent (MUST call `invoke_subagent`)
-- Once the plan draft in `.coliper/plans/<slug>.md` is written, call `invoke_subagent` with `TypeName: "momus"` (or `"reviewer"`).
-- Instruct `momus` to audit `.coliper/plans/<slug>.md` against:
-  - **Completeness & Edge Cases**: Are all scenarios covered?
-  - **Bite-Sized Task Granularity**: Is each task scoped to 2-5 files max?
-  - **Empirical Verification**: Does every task specify explicit test/build commands?
-  - **Architectural Invariants**: Are backwards compatibility and constraints preserved?
+#### Phase 2: Strategic Plan Generation (MUST call `invoke_subagent` with `planner`)
+- Call `invoke_subagent` with `TypeName: "planner"`.
+- Provide task requirements, module paths, constraints, and `metis` gap report resolution.
+- Instruct `planner` to write the plan to `.coliper/plans/<slug>.md` AND to system artifact `<appDataDir>/brain/<conversation-id>/implementation_plan.md` (`UserFacing: true`, `RequestFeedback: true`).
 
-#### Step C: Plan Revision & Hybrid Finalization
-- If `momus` identifies deficiencies, update `.coliper/plans/<slug>.md` and update `<appDataDir>/brain/<conversation-id>/implementation_plan.md` to incorporate all required revisions.
-- Once verified by `momus`, present the finalized plan summary to the user for alignment.
+#### Phase 3: Deep Plan Audit (MUST call `invoke_subagent` with `momus`)
+- Call `invoke_subagent` with `TypeName: "momus"`.
+- Instruct `momus` to verify `.coliper/plans/<slug>.md` against:
+  - **Reference Verification**: verify that all referenced file paths and symbols actually exist in the codebase.
+  - **Executability & Task Granularity**: confirm every task is scoped to 2-5 files max and gives a concrete starting point.
+  - **QA Scenario Executability**: ensure every task specifies exact tool invocations, concrete inputs, expected results, and evidence paths.
+- Evaluate `momus` verdict:
+  - `OKAY`: Proceed to user presentation.
+  - `ITERATE`: Patch identified issues (max 2 rounds) and re-audit with `momus`.
+  - `REJECT`: Surface missing critical decisions to the user.
+
+---
 
 ### 3. Plan Specification Structure
 Every plan generated by `/ulw-plan` must include:
-- **Goal & Overview**: Clear summary of what is being built or refactored.
-- **Architecture & Design**: Tech stack, component interactions, API signatures, and state management choices.
-- **Global Constraints**: Invariants, backwards compatibility, and quality rules.
-- **Decomposed Task List**: Step-by-step actionable tasks using checkbox syntax (`- [ ]`).
-- **Verification Criteria**: Specific test commands or empirical checks required for each step.
-
-### 4. Granular Task Decomposition
-- Break large features into self-contained, bite-sized tasks (2-5 files per task maximum).
-- Each task must specify:
-  - Affected files (Create/Modify/Delete).
-  - Interfaces and signatures.
-  - Step-by-step TDD sequence (Write failing test -> Run & verify failure -> Implement -> Verify pass -> Commit).
+- **TL;DR & Overview**: Summary, deliverables, effort, and risk driver.
+- **Scope**: Must-Have and Must-NOT-Have boundaries.
+- **Execution Strategy**: Parallel execution waves and dependency matrix.
+- **Granular Todos**: Step-by-step actionable tasks using checkbox syntax (`- [ ]`). Each task MUST include:
+  - **References**: Exact file paths and line numbers.
+  - **Acceptance Criteria**: Agent-executable assertions/commands.
+  - **QA Scenarios**: Concrete tool invocation, steps, expected output, and evidence path (`.coliper/plans/` or `.omo/evidence/`).
+  - **Commit Instruction**: Type, scope, message, and files list.
+- **Final Verification Wave**: F1 Compliance, F2 Code Quality, F3 Manual/Automated QA, F4 Scope Fidelity.
