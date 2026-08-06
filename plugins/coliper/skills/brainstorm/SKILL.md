@@ -21,7 +21,7 @@ You MUST complete these items in order:
 2. **Ask clarifying questions** — one at a time, understand purpose/constraints/success criteria
 3. **Propose 2-3 approaches** — with trade-offs and your recommendation
 4. **Present design** — in sections scaled to their complexity, get user approval after each section
-5. **Write design doc** — save to `.coliper/specs/<slug>-design.md` and commit
+5. **Write design doc** — save to `.coliper/specs/<slug>-design.md`
 6. **Spec self-review** — quick inline check for placeholders, contradictions, ambiguity, scope
 7. **User reviews written spec** — ask user to review the spec file before proceeding
 8. **Handoff to Metis & `/ultraplan`** — pass the approved `.coliper/specs/<slug>-design.md` to `metis` subagent for pre-planning gap analysis, followed by `/ultraplan` plan generation.

@@ -8,6 +8,8 @@
 
 Coliper equips your workspace with specialized slash commands for every phase of the development lifecycle:
 
+→ See [WORKFLOW.md](WORKFLOW.md) for the full lifecycle walkthrough.
+
 - **`/init-deep`**: Deep codebase research and repository analysis. Maps architecture, conventions, and dependencies to initialize workspace memory context before starting major work.
 - **`/ultraplan`**: Prometheus strategic plan generation. Breaks complex feature requests into actionable, verifiable, step-by-step implementation plans.
 - **`/brainstorm`**: Interactive spec authoring. Refines user ideas into fully formed design spec documents before plan drafting.

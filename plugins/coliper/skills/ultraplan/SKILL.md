@@ -9,8 +9,8 @@ Use `/ultraplan` to design architectural strategies, run multi-phase gap analysi
 
 ## Overview
 `/ultraplan` orchestrates a mandatory **Four-Stage Subagent Review Workflow** powered by **Dual Design Spec Entry Points** (`/ultraplan` autonomous vs `/brainstorm` interactive) and uses a **Hybrid Artifact Strategy**:
-1. **Design Spec Document**: `.coliper/specs/<slug>-design.md` (persistent project design spec).
-2. **Durable Plan Store**: `.coliper/plans/<slug>.md` (ignored by git, holds persistent workspace plan & state).
+1. **Design Spec Document**: `.coliper/specs/<slug>-design.md` (ignored by git, local untracked workspace design spec).
+2. **Durable Plan Store**: `.coliper/plans/<slug>.md` (ignored by git, local untracked workspace plan & state).
 3. **Antigravity System Artifact**: `<appDataDir>/brain/<conversation-id>/implementation_plan.md` (renders interactive IDE UI panel with Feedback/Proceed controls).
 
 ---
