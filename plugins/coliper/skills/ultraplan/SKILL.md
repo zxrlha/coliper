@@ -1,6 +1,6 @@
 ---
 name: ultraplan
-description: Prometheus strategic planner with Metis gap analysis and Momus plan auditing. Creates a decision-complete implementation plan in .coliper/plans/<slug>.md and as an Antigravity system artifact without touching product code.
+description: Prometheus strategic planner with Metis gap analysis and Momus plan auditing. Creates a decision-complete implementation plan in .coliper/plans/<slug>.md without touching product code. Execute plans via /start-work.
 ---
 
 # `/ultraplan` - Prometheus Strategic Planner
@@ -8,10 +8,9 @@ description: Prometheus strategic planner with Metis gap analysis and Momus plan
 Use `/ultraplan` to design architectural strategies, run multi-phase gap analysis and plan auditing, and write decision-complete implementation plans before making any code modifications.
 
 ## Overview
-`/ultraplan` orchestrates a mandatory **Four-Stage Subagent Review Workflow** powered by **Dual Design Spec Entry Points** (`/ultraplan` autonomous vs `/brainstorm` interactive) and uses a **Hybrid Artifact Strategy**:
+`/ultraplan` orchestrates a mandatory **Four-Stage Subagent Review Workflow** powered by **Dual Design Spec Entry Points** (`/ultraplan` autonomous vs `/brainstorm` interactive) and writes to two durable local files:
 1. **Design Spec Document**: `.coliper/specs/<slug>-design.md` (ignored by git, local untracked workspace design spec).
-2. **Durable Plan Store**: `.coliper/plans/<slug>.md` (ignored by git, local untracked workspace plan & state).
-3. **Antigravity System Artifact**: `<appDataDir>/brain/<conversation-id>/implementation_plan.md` (renders interactive IDE UI panel with Feedback/Proceed controls).
+2. **Durable Plan Store**: `.coliper/plans/<slug>.md` (ignored by git, local untracked workspace plan & state — execute via `/start-work`).
 
 ---
 
@@ -22,7 +21,7 @@ Use `/ultraplan` to design architectural strategies, run multi-phase gap analysi
 - **Dual Entry Points**:
   - **Interactive Entry Point (`/brainstorm`)**: Asks clarifying questions one at a time, presents options, and produces `.coliper/specs/<slug>-design.md` with explicit user approval.
   - **Autonomous Entry Point (`/ultraplan` Stage 0)**: Non-interactively interprets the user's idea at best to generate `.coliper/specs/<slug>-design.md` autonomously.
-- Only inspect codebase files, read context documents, and write to `.coliper/specs/<slug>-design.md`, `.coliper/plans/<slug>.md`, and system artifact `implementation_plan.md`.
+- Only inspect codebase files, read context documents, and write to `.coliper/specs/<slug>-design.md` and `.coliper/plans/<slug>.md`.
 
 ---
 
@@ -45,7 +44,7 @@ Use `/ultraplan` to design architectural strategies, run multi-phase gap analysi
 #### Stage 2: Strategic Plan Generation (MUST call `invoke_subagent` with `planner`)
 - Call `invoke_subagent` with `TypeName: "planner"`.
 - Provide `.coliper/specs/<slug>-design.md`, module paths, constraints, and `metis` gap report resolution.
-- Instruct `planner` to read `.coliper/specs/<slug>-design.md` via `view_file` and write the plan to `.coliper/plans/<slug>.md` AND to system artifact `<appDataDir>/brain/<conversation-id>/implementation_plan.md` (`UserFacing: true`, `RequestFeedback: true`).
+- Instruct `planner` to read `.coliper/specs/<slug>-design.md` via `view_file` and write the plan **only** to `.coliper/plans/<slug>.md`. Do NOT write to any Antigravity system artifact.
 
 #### Stage 3: Deep Plan Audit (MUST call `invoke_subagent` with `momus`)
 - Call `invoke_subagent` with `TypeName: "momus"`.
