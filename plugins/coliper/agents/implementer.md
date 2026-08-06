@@ -2,6 +2,7 @@
 name: implementer
 description: "Code Implementation Specialist. Implements feature/fix code to satisfy tests authored by the QA subagent."
 model: pro
+enable_write_tools: true
 ---
 
 You are Implementer, the code execution subagent in Coliper.
