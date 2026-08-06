@@ -12,6 +12,13 @@ Use `/start-work` to execute implementation plans in `.coliper/plans/<slug>.md` 
 
 ## Guidelines & Instructions
 
+### Subagent Setup (Write Tool Registration)
+- Extract the workspace absolute path from `<user_information>`.
+- Read `planner.md`, `implementer.md`, `qa.md`, and `librarian.md` from `/path/to/workspace/.agents/plugins/coliper/agents/` via `view_file`. Halt and report if any file is missing.
+- Extract descriptions (fallback: "Subagent for <agent_name>") and models (fallback: "inherit"), and `system_prompts` after the second `---` line (stripping `<line_number>:` prefixes).
+- Call `define_subagent` for `coliper_planner`, `coliper_implementer`, `coliper_qa`, `coliper_librarian` (`enable_write_tools: true`, `enable_subagent_tools: false`, `enable_mcp_tools: false`). Treat "already exists" as success; halt on other errors.
+- Include legacy name mapping rule: Map legacy names (e.g., `planner`, `implementer`) to their new `coliper_` prefixed names when invoking.
+
 ### 1. Plan Loading & Inspection
 - Read the specified plan file from `.coliper/plans/<slug>.md` (or `<appDataDir>/brain/<conversation-id>/implementation_plan.md`).
 - Parse all tasks and checklist items (`- [ ]`).
@@ -25,9 +32,9 @@ Use `/start-work` to execute implementation plans in `.coliper/plans/<slug>.md` 
 
 ### 3. Implementation Task Execution Sequence
 For each unchecked implementation task (`- [ ] N. ...`):
-1. **Dispatch QA (Test Authoring) (MUST call `invoke_subagent`)**: Call `invoke_subagent` with `TypeName: "qa"` to write failing acceptance/integration tests based on task requirements and QA scenarios.
-2. **Dispatch Implementer (MUST call `invoke_subagent`)**: Call `invoke_subagent` with `TypeName: "implementer"` to write production feature code to satisfy the QA tests.
-3. **Dispatch QA (Test Runner & Evidence Collection) (MUST call `invoke_subagent`)**: Call `invoke_subagent` with `TypeName: "qa"` to run the test suite and QA scenarios, capturing 0-exit-code logs and empirical evidence.
+1. **Dispatch QA (Test Authoring) (MUST call `invoke_subagent`)**: Call `invoke_subagent` with `TypeName: "coliper_qa"`, `Model: "pro"` to write failing acceptance/integration tests based on task requirements and QA scenarios.
+2. **Dispatch Implementer (MUST call `invoke_subagent`)**: Call `invoke_subagent` with `TypeName: "coliper_implementer"`, `Model: "pro"` to write production feature code to satisfy the QA tests.
+3. **Dispatch QA (Test Runner & Evidence Collection) (MUST call `invoke_subagent`)**: Call `invoke_subagent` with `TypeName: "coliper_qa"`, `Model: "pro"` to run the test suite and QA scenarios, capturing 0-exit-code logs and empirical evidence.
 4. **Dispatch Reviewer (MUST call `invoke_subagent`)**: Call `invoke_subagent` with `TypeName: "reviewer"` to perform an empirical code review of the modified files and QA evidence logs.
 5. **Update Progress**: If verified by `reviewer`, mark checkbox `- [x]` in `.coliper/plans/<slug>.md` and record status in `.coliper/progress.md`.
 6. **Halt on Failure**: If any step fails or tests break, halt execution, log error tracebacks, and report to user.
@@ -38,15 +45,17 @@ When all implementation tasks are complete, execute the **Final Verification Wav
    - Call `invoke_subagent` with `TypeName: "reviewer"` to verify implemented functionality against all requirements, scope boundaries, and acceptance criteria in the plan.
 2. **F2: Code Quality & Discipline Review (MUST call `invoke_subagent` with `reviewer`)**:
    - Call `invoke_subagent` with `TypeName: "reviewer"` to perform post-implementation code review checking maintainability, edge-case safety, error handling, and freedom from AI slop.
-3. **F3: System & Integration QA (MUST call `invoke_subagent` with `qa`)**:
-   - Call `invoke_subagent` with `TypeName: "qa"` to execute full project test suites, regression checks, and capture 0-exit-code logs as final verification evidence.
+3. **F3: System & Integration QA (MUST call `invoke_subagent` with `coliper_qa`)**:
+   - Call `invoke_subagent` with `TypeName: "coliper_qa"`, `Model: "pro"` to execute full project test suites, regression checks, and capture 0-exit-code logs as final verification evidence.
 4. **F4: Scope Fidelity Audit (MUST call `invoke_subagent` with `momus`)**:
    - Call `invoke_subagent` with `TypeName: "momus"` to verify no scope creep, unrequested architectural changes, or untracked file modifications occurred.
 
 Mark each wave task `- [x]` as its subagent audit returns `PASS` with empirical evidence.
 
 ### 5. Subagent Orchestration & Global Review Gate
-- MUST use `invoke_subagent` for all testing, implementation, and review phases (`qa`, `implementer`, `reviewer`, `explorer`, `planner`, `momus`, `metis`).
+- Write subagents with `coliper_` prefix and their models: `coliper_implementer` (pro), `coliper_qa` (pro), `coliper_planner` (pro), `coliper_librarian` (flash).
+- Read-only subagents without prefixes: `reviewer`, `explorer`, `momus`, `metis`.
+- MUST use `invoke_subagent` for all testing, implementation, and review phases. Update all invoke_subagent mentions to pass the Model parameter and use `coliper_` prefixes where appropriate.
 - Maintain clear task boundaries and isolated contexts per subagent dispatch.
 - Prior to outputting `ORCHESTRATION COMPLETE`, invoke the `review-work` skill across all modified files to ensure all 4 review angles (Correctness, Edge-Case Safety, Security, Performance) pass.
 

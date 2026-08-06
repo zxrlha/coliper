@@ -10,7 +10,7 @@ Help turn user ideas into fully formed Design Specs through natural collaborativ
 Start by understanding the current project context, then ask clarifying questions **one at a time** to refine the idea. Once you understand what you're building, present the design, get user approval, write the Design Spec document to `.coliper/specs/<slug>-design.md`, and hand off the spec path to `metis` and `/ultraplan`.
 
 <HARD-GATE>
-Do NOT write implementation code, scaffold code, or invoke planner/implementer until you have presented a design spec, gotten user approval, saved it to `.coliper/specs/<slug>-design.md`, and passed it through Metis gap analysis.
+Do NOT write implementation code, scaffold code, or invoke coliper_planner/coliper_implementer until you have presented a design spec, gotten user approval, saved it to `.coliper/specs/<slug>-design.md`, and passed it through Metis gap analysis.
 </HARD-GATE>
 
 ## Checklist
